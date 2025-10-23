@@ -2,21 +2,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Your own server",
-            "request": "launch",
+            "name": "Publish to bctest",
             "type": "al",
-            "environmentType": "Sandbox",
-            "server": "http://bctest/BC⁠",
+            "request": "launch",
+            "server": "http://bctest",
             "serverInstance": "BC",
             "authentication": "UserPassword",
             "startupObjectId": 22,
             "startupObjectType": "Page",
-            "breakOnError": "All",
-            "launchBrowser": true,
-            "enableLongRunningSqlStatements": true,
-            "enableSqlInformationDebugger": true,
             "tenant": "default",
-            "usePublicURLFromServer": true
+            "schemaUpdateMode": "Synchronize",
+            "breakOnError": true,
+            "launchBrowser": true,
+            "environmentType": "Sandbox"
         }
     ]
 }
