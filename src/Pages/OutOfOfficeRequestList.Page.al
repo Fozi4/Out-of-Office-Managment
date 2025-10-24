@@ -6,7 +6,7 @@ page 50101 "Out Of Office Request List"
     Editable = false;
     Caption = 'Out Of Office Request List';
     UsageCategory = Lists;
-
+    CardPageId = "Out Of Office Request Document";
     layout
     {
         area(Content)
@@ -15,43 +15,33 @@ page 50101 "Out Of Office Request List"
             {
                 field("Entry No."; Rec."Entry No.")
                 {
-                    ApplicationArea = All;
                 }
                 field("Employee No."; Rec."Employee No.")
                 {
-                    ApplicationArea = All;
                 }
                 field("Start Date"; Rec."Start Date")
                 {
-                    ApplicationArea = All;
                 }
                 field("Start Time"; Rec."Start Time")
                 {
-                    ApplicationArea = All;
                 }
                 field("End Date"; Rec."End Date")
                 {
-                    ApplicationArea = All;
                 }
                 field("End Time"; Rec."End Time")
                 {
-                    ApplicationArea = All;
                 }
                 field("Reason Code"; Rec."Reason Code")
                 {
-                    ApplicationArea = All;
                 }
                 field("Status"; Rec."Status")
                 {
-                    ApplicationArea = All;
                 }
                 field("Description"; Rec."Description")
                 {
-                    ApplicationArea = All;
                 }
                 field("Reject Reason"; Rec."Reject Reason")
                 {
-                    ApplicationArea = All;
                 }
             }
         }
@@ -67,9 +57,10 @@ page 50101 "Out Of Office Request List"
                 Image = Start;
                 trigger OnAction()
                 begin
+                    ValidateRequiredFields();
                     Rec.Status := Rec.Status::"In Process";
-                    //Rec.Modify(true);
-                    //CurrPage.Update(false);
+                    Rec.Modify(true);
+                    CurrPage.Update(false);
                 end;
             }
             action("Approve")
@@ -79,9 +70,10 @@ page 50101 "Out Of Office Request List"
                 Image = Approve;
                 trigger OnAction()
                 begin
+                    ValidateRequiredFields();
                     Rec.Status := Rec.Status::"Approved";
-                    //Rec.Modify(true);
-                    //CurrPage.Update(false);
+                    Rec.Modify(true);
+                    CurrPage.Update(false);
                 end;
             }
             action("Decline")
@@ -91,9 +83,10 @@ page 50101 "Out Of Office Request List"
                 Image = Reject;
                 trigger OnAction()
                 begin
+                    ValidateRequiredFields();
                     Rec.Status := Rec.Status::"Declined";
-                    //Rec.Modify(true);
-                    //CurrPage.Update(false);
+                    Rec.Modify(true);
+                    CurrPage.Update(false);
                 end;
             }
         }
@@ -113,5 +106,25 @@ page 50101 "Out Of Office Request List"
             }
         }
     }
+    local procedure ValidateRequiredFields()
+    begin
+        if Rec."Start Date" = 0D then
+            Error('Start Date is required.');
+
+        if Rec."Start Time" = 0T then
+            Error('Start Time is required.');
+
+        if Rec."End Date" = 0D then
+            Error('End Date is required.');
+
+        if Rec."End Time" = 0T then
+            Error('End Time is required.');
+
+        if Rec."Reason Code" = '' then
+            Error('Reason Code is required.');
+
+        if Rec.Description = '' then
+            Error('Description is required.');
+    end;
 
 }

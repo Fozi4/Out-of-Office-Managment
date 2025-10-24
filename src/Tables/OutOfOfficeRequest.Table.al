@@ -62,4 +62,14 @@ table 50101 "Out Of Office Request"
             Clustered = true;
         }
     }
+    trigger OnInsert()
+    var
+        Employee: Record Employee;
+
+    begin
+        Employee.SetRange("Associated User Id", UserSecurityId());
+        if Employee.FindFirst() then
+            Rec."Employee No." := Employee."No.";
+
+    end;
 }
