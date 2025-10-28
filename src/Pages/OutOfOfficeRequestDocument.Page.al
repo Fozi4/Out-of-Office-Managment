@@ -31,7 +31,6 @@ page 50102 "Out Of Office Request Document"
                     NotBlank = true;
                     ShowMandatory = true;
                     ToolTip = 'Specify the starting time of the absence on the start date.';
-
                 }
                 field("End Date"; Rec."End Date")
                 {

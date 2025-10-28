@@ -89,6 +89,17 @@ page 50101 "Out Of Office Request List"
                     CurrPage.Update(false);
                 end;
             }
+
+            action("Print Out of Office Day Count")
+            {
+                Caption = 'Print Out of Office Day Count';
+                ApplicationArea = All;
+                Image = Print;
+                trigger OnAction()
+                begin
+                    Report.RunModal(Report::"Out Of Office Report", true, true);
+                end;
+            }
         }
         area(Promoted)
         {
@@ -101,6 +112,10 @@ page 50101 "Out Of Office Request List"
 
             }
             actionref("Decline Promoted"; "Decline")
+            {
+
+            }
+            actionref("Print Out of Office Day Count Promoted"; "Print Out of Office Day Count")
             {
 
             }
