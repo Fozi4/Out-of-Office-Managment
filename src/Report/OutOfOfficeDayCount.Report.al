@@ -7,41 +7,58 @@ report 50110 "Out Of Office Report"
 
     dataset
     {
-        dataitem(Request; "Out Of Office Request")
+        dataitem(Employee; "Out Of Office Request")
         {
-            RequestFilterFields = "Employee No.", "Start Date", "End Date";
-            column(Start_Date; "StartDateFilter") { }
-            column(End_Date; "EndDateFilter") { }
+            RequestFilterFields = "Employee No.";
             column(Employee_No_; "Employee No.") { }
             column(Employee_Name; EmpName) { }
-            column(Reason_Code; "Reason Code") { }
-            column(Day_Count; DayCount) { }
+
+            dataitem(Request; "Out Of Office Request")
+            {
+                DataItemLink = "Employee No." = field("Employee No.");
+                column(Start_Date; "StartDateFilter") { }
+                column(End_Date; "EndDateFilter") { }
+                column(Reason_Code; "Reason Code") { }
+                column(Day_Count; DayCount) { }
+                trigger OnAfterGetRecord()
+                begin
+                    if ProcessedCodeList.Contains(Request."Reason Code") then
+                        CurrReport.Skip();
+                    OutOfficeRequest.SetRange("Employee No.", Employee."Employee No.");
+                    OutOfficeRequest.SetFilter("Start Date", '>=%1 ', StartDateFilter);
+                    OutOfficeRequest.SetFilter("End Date", '<=%1', EndDateFilter);
+                    OutOfficeRequest.SetRange("Reason Code", Request."Reason Code");
+                    Clear(DayCount);
+                    if OutOfficeRequest.FindSet() then
+                        repeat
+                            DayCount += (OutOfficeRequest."End Date" - OutOfficeRequest."Start Date") + 1;
+                        until OutOfficeRequest.Next() = 0;
+                    ProcessedCodeList.Add(Request."Reason Code");
+                end;
+
+                trigger OnPreDataItem()
+                begin
+                    Request.SetFilter("Start Date", '>=%1 ', StartDateFilter);
+                    Request.SetFilter("End Date", '<=%1', EndDateFilter);
+                end;
+            }
+
             trigger OnAfterGetRecord()
             var
                 Emp: Record Employee;
-                OutOfficeRequest: Record "Out Of Office Request";
             begin
-                if ProcessedCodeList.Contains(Request."Reason Code") then
+                if ProcessedEmpCodeList.Contains(Employee."Employee No.") then
                     CurrReport.Skip();
-                OutOfficeRequest.SetRange("Employee No.", EmployeeNumberFilter);
-                OutOfficeRequest.SetFilter("Start Date", '>=%1 ', StartDateFilter);
-                OutOfficeRequest.SetFilter("End Date", '<=%1', EndDateFilter);
-                OutOfficeRequest.SetRange("Reason Code", Request."Reason Code");
-                Clear(DayCount);
-                if OutOfficeRequest.FindSet() then
-                    repeat
-                        DayCount += (OutOfficeRequest."End Date" - OutOfficeRequest."Start Date") + 1;
-                    until OutOfficeRequest.Next() = 0;
-                ProcessedCodeList.Add(Request."Reason Code");
                 EmpName := '';
-                if Emp.Get(Request."Employee No.") then
+                if Emp.Get(Employee."Employee No.") then
                     EmpName := Emp."First Name" + ' ' + Emp."Last Name";
+                ProcessedEmpCodeList.Add(Employee."Employee No.");
             end;
 
             trigger OnPreDataItem()
             begin
-                Request.SetFilter("Start Date", '>=%1 ', StartDateFilter);
-                Request.SetFilter("End Date", '<=%1', EndDateFilter);
+                Employee.SetFilter("Start Date", '>=%1 ', StartDateFilter);
+                Employee.SetFilter("End Date", '<=%1', EndDateFilter);
             end;
         }
 
@@ -61,28 +78,9 @@ report 50110 "Out Of Office Report"
                 {
 
                 }
-                field(EmployeeNumberFilter; EmployeeNumberFilter)
-                {
-                    TableRelation = "Employee";
-                    ShowMandatory = true;
-                    NotBlank = true;
-                    trigger OnValidate()
-                    begin
-                        if EmployeeNumberFilter = '' then begin
-                            Error('Employee cannot be empty');
-                        end;
-                    end;
-                }
             }
 
         }
-        trigger OnQueryClosePage(CloseAction: Action): Boolean
-        begin
-            if EmployeeNumberFilter = '' then begin
-                Message('Employee cannot be empty');
-                exit(false);
-            end;
-        end;
     }
 
 
@@ -100,6 +98,7 @@ report 50110 "Out Of Office Report"
         EmpName: Text[100];
         StartDateFilter: Date;
         EndDateFilter: Date;
-        EmployeeNumberFilter: Code[20];
         ProcessedCodeList: List of [Code[20]];
+        ProcessedEmpCodeList: List of [Code[20]];
+        OutOfficeRequest: Record "Out Of Office Request";
 }

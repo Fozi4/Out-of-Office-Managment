@@ -54,10 +54,6 @@ table 50101 "Out Of Office Request"
         {
             Caption = 'Rejection Reason';
         }
-        field(11; "Days"; Integer)
-        {
-            Caption = 'Days';
-        }
     }
     keys
     {

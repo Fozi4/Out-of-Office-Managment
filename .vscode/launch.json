@@ -8,7 +8,7 @@
             "server": "http://bctest",
             "serverInstance": "BC",
             "authentication": "UserPassword",
-            "startupObjectId": 50101,
+            "startupObjectId": 22,
             "startupObjectType": "Page",
             "tenant": "default",
             "schemaUpdateMode": "Synchronize",
