@@ -28,6 +28,7 @@ report 50110 "Out Of Office Report"
                     OutOfficeRequest.SetFilter("Start Date", '>=%1 ', StartDateFilter);
                     OutOfficeRequest.SetFilter("End Date", '<=%1', EndDateFilter);
                     OutOfficeRequest.SetRange("Reason Code", Request."Reason Code");
+                    //OutOfficeRequest.SetFilter(Status, 'Approved');
                     Clear(DayCount);
                     if OutOfficeRequest.FindSet() then
                         repeat
@@ -55,11 +56,6 @@ report 50110 "Out Of Office Report"
                 ProcessedEmpCodeList.Add(Employee."Employee No.");
             end;
 
-            trigger OnPreDataItem()
-            begin
-                Employee.SetFilter("Start Date", '>=%1 ', StartDateFilter);
-                Employee.SetFilter("End Date", '<=%1', EndDateFilter);
-            end;
         }
 
 

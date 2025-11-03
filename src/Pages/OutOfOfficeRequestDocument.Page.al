@@ -50,7 +50,7 @@ page 50102 "Out Of Office Request Document"
                 {
                     NotBlank = true;
                     ShowMandatory = true;
-                    ToolTip = 'Specify the reason for the absence, such as vacation, sick leave, or training.';
+                    ToolTip = 'Specify the reason for the absence.';
 
                 }
                 field(Status; Rec.Status)

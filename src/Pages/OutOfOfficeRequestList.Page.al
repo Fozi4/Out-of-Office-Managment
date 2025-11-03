@@ -15,33 +15,43 @@ page 50101 "Out Of Office Request List"
             {
                 field("Entry No."; Rec."Entry No.")
                 {
+                    ToolTip = 'Specifies the unique number of the out of office request.';
                 }
                 field("Employee No."; Rec."Employee No.")
                 {
+                    ToolTip = 'Specifies the employee who is submitting the out of office request.';
                 }
                 field("Start Date"; Rec."Start Date")
                 {
+                    ToolTip = 'Specify the first day of the absence period.';
                 }
                 field("Start Time"; Rec."Start Time")
                 {
+                    ToolTip = 'Specify the starting time of the absence on the start date.';
                 }
                 field("End Date"; Rec."End Date")
                 {
+                    ToolTip = 'Specify the last day of the absence period.';
                 }
                 field("End Time"; Rec."End Time")
                 {
+                    ToolTip = 'Specify the ending time of the absence on the end date.';
                 }
                 field("Reason Code"; Rec."Reason Code")
                 {
+                    ToolTip = 'Specify the reason for the absence.';
                 }
                 field("Status"; Rec."Status")
                 {
+                    ToolTip = 'Shows the current status of the request: New, In Process, Approved, or Declined.';
                 }
                 field("Description"; Rec."Description")
                 {
+                    ToolTip = 'Provide additional details or comments about the absence request.';
                 }
                 field("Reject Reason"; Rec."Reject Reason")
                 {
+                    ToolTip = 'Specify the reason why the request was declined, if applicable.';
                 }
             }
         }

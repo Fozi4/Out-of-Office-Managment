@@ -13,11 +13,13 @@ page 50100 "Out Of Office Reason List"
             {
                 field("Code"; Rec."Code")
                 {
-                    ApplicationArea = All;
+                    Caption = 'Reason';
+                    ToolTip = 'Reason Codes.';
                 }
                 field("Description"; Rec."Description")
                 {
-                    ApplicationArea = All;
+                    Caption = 'Description';
+                    ToolTip = 'Description of the reason for being out of office.';
                 }
             }
         }

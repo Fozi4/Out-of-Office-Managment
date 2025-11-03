@@ -18,8 +18,10 @@ table 50101 "Out Of Office Request"
             Caption = 'Start Date';
             trigger OnValidate()
             begin
+                if "Start Date" < Today then
+                    Error('The date must be no earlier than today.');
                 if "Start Date" < WorkDate() then
-                    Error('The date must be no earlier than WORKDATE');
+                    Error('The date must be no earlier than WORKDATE.');
             end;
         }
         field(4; "Start Time"; Time)
@@ -30,6 +32,11 @@ table 50101 "Out Of Office Request"
         field(5; "End Date"; Date)
         {
             Caption = 'End Date';
+            trigger OnValidate()
+            begin
+                if "End Date" < "Start Date" then
+                    Error('Ending date, must be no earlier than starting date.');
+            end;
         }
         field(6; "End Time"; Time)
         {
@@ -53,6 +60,10 @@ table 50101 "Out Of Office Request"
         field(10; "Reject Reason"; Text[250])
         {
             Caption = 'Rejection Reason';
+        }
+        field(11; "Days"; Integer)
+        {
+
         }
     }
     keys
