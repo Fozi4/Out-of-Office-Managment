@@ -65,6 +65,10 @@ table 50101 "Out Of Office Request"
         {
 
         }
+        field(12; "Photo"; Media)
+        {
+            Caption = 'Document';
+        }
     }
     keys
     {

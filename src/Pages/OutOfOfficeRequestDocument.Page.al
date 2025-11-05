@@ -69,10 +69,14 @@ page 50102 "Out Of Office Request Document"
                 {
                     ToolTip = 'Specify the reason why the request was declined, if applicable.';
                 }
-
             }
-
         }
-
+        area(FactBoxes)
+        {
+            part(Photo; "Out Of Office Photo FactBox")
+            {
+                SubPageLink = "Entry No." = field("Entry No.");
+            }
+        }
     }
 }

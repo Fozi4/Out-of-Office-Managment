@@ -93,6 +93,8 @@ page 50101 "Out Of Office Request List"
                 Image = Reject;
                 trigger OnAction()
                 begin
+                    if Rec."Reject Reason" = '' then
+                        Error('Reject Reason must be indicated.');
                     ValidateRequiredFields();
                     Rec.Status := Rec.Status::"Declined";
                     Rec.Modify(true);
