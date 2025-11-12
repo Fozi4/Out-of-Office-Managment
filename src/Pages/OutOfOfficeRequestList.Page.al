@@ -60,76 +60,108 @@ page 50101 "Out Of Office Request List"
     {
         area(Processing)
         {
-            action("Start process")
+            group("Request Status")
             {
-                Caption = 'Start Process';
-                ApplicationArea = All;
-                Image = Start;
-                trigger OnAction()
-                begin
-                    ValidateRequiredFields();
-                    Rec.Status := Rec.Status::"In Process";
-                    Rec.Modify(true);
-                    CurrPage.Update(false);
-                end;
-            }
-            action("Approve")
-            {
-                Caption = 'Approve';
-                ApplicationArea = All;
-                Image = Approve;
-                trigger OnAction()
-                begin
-                    ValidateRequiredFields();
-                    Rec.Status := Rec.Status::"Approved";
-                    Rec.Modify(true);
-                    CurrPage.Update(false);
-                end;
-            }
-            action("Decline")
-            {
-                Caption = 'Decline';
-                ApplicationArea = All;
-                Image = Reject;
-                trigger OnAction()
-                begin
-                    if Rec."Reject Reason" = '' then
-                        Error('Reject Reason must be indicated.');
-                    ValidateRequiredFields();
-                    Rec.Status := Rec.Status::"Declined";
-                    Rec.Modify(true);
-                    CurrPage.Update(false);
-                end;
-            }
+                Caption = 'Status';
+                ToolTip = 'Change the status of the request.';
+                Image = Status;
 
-            action("Print Out of Office Day Count")
-            {
-                Caption = 'Print Out of Office Day Count';
-                ApplicationArea = All;
-                Image = Print;
-                trigger OnAction()
-                begin
-                    Report.RunModal(Report::"Out Of Office Report", true, true);
-                end;
+                action("Start Process")
+                {
+                    Caption = 'Start Process';
+                    ToolTip = 'Sets the request status to In Process.';
+                    ApplicationArea = All;
+                    Image = Start;
+                    trigger OnAction()
+                    begin
+                        ValidateRequiredFields();
+                        Rec.Status := Rec.Status::"In Process";
+                        Rec.Modify(true);
+                        CurrPage.Update(false);
+                    end;
+                }
+                action("Approve")
+                {
+                    Caption = 'Approve';
+                    ToolTip = 'Sets the request status to Approved.';
+                    ApplicationArea = All;
+                    Image = Approve;
+                    trigger OnAction()
+                    begin
+                        ValidateRequiredFields();
+                        Rec.Status := Rec.Status::"Approved";
+                        Rec.Modify(true);
+                        CurrPage.Update(false);
+                    end;
+                }
+                action("Decline")
+                {
+                    Caption = 'Decline';
+                    ToolTip = 'Sets the request status to Declined.';
+                    ApplicationArea = All;
+                    Image = Reject;
+                    trigger OnAction()
+                    begin
+                        if Rec."Reject Reason" = '' then
+                            Error('Reject Reason must be indicated.');
+                        ValidateRequiredFields();
+                        Rec.Status := Rec.Status::"Declined";
+                        Rec.Modify(true);
+                        CurrPage.Update(false);
+                    end;
+                }
+
+
+                action("Print Out of Office Day Count")
+                {
+                    Caption = 'Print Out of Office Day Count';
+                    ToolTip = 'Opens the Out Of Office Report to print the day count.';
+                    ApplicationArea = All;
+                    Image = Print;
+                    trigger OnAction()
+                    begin
+                        Report.RunModal(Report::"Out Of Office Report", true, true);
+                    end;
+                }
+                // action(ImportPicture)
+                // {
+                //     ApplicationArea = All;
+                //     Caption = 'Import';
+                //     Image = Import;
+                //     ToolTip = 'Import a picture file.';
+                //     trigger OnAction()
+                //     var
+                //         TempBlob: Codeunit "Temp Blob";
+                //         FileName: Text;
+                //         InStream: InStream;
+                //         OutStream: OutStream;
+                //     begin
+                //         if UploadIntoStream('Import Picture', '', '', FileName, InStream) then begin
+                //             TempBlob.CreateOutStream(OutStream);
+                //             CopyStream(OutStream, InStream);
+                //             Rec.CalcFields("Photo Blob");
+                //             Rec."Photo Blob".CreateOutStream(OutStream);
+                //             TempBlob.CreateInStream(InStream);
+                //             CopyStream(OutStream, InStream);
+                //         end;
+                //     end;
+                // }
             }
         }
         area(Promoted)
         {
-            actionref("Start process Promoted"; "Start process")
+            group("Request Status Promoted")
             {
+                Caption = 'Status';
+                ToolTip = 'Change the status of the request.';
+                Image = Status;
+                ShowAs = SplitButton;
 
-            }
-            actionref("Approve Promoted"; "Approve")
-            {
-
-            }
-            actionref("Decline Promoted"; "Decline")
-            {
-
-            }
-            actionref("Print Out of Office Day Count Promoted"; "Print Out of Office Day Count")
-            {
-
+                actionref("Start Process Promoted"; "Start Process") { }
+                actionref("Approve Promoted"; "Approve") { }
+                actionref("Decline Promoted"; "Decline") { }
+                actionref("Print Out of Office Day Count Promoted"; "Print Out of Office Day Count") { }
+                //actionref("ImportPicture Promoted"; "ImportPicture") { }
             }
         }
     }

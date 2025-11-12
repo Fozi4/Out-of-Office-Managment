@@ -17,31 +17,51 @@ table 50101 "Out Of Office Request"
         {
             Caption = 'Start Date';
             trigger OnValidate()
+            var
+                ErrorMessage: Text;
             begin
-                if "Start Date" < Today then
-                    Error('The date must be no earlier than today.');
-                if "Start Date" < WorkDate() then
-                    Error('The date must be no earlier than WORKDATE.');
+                ErrorMessage := Validation.Validation("Start Date", "End Date", "Start Time", "End Time", "Reason Code");
+                if ErrorMessage <> '' then
+                    Error(ErrorMessage);
             end;
         }
         field(4; "Start Time"; Time)
         {
             Caption = 'Start Time';
             InitValue = 090000T;
+            trigger OnValidate()
+            var
+                ErrorMessage: Text;
+            begin
+                ErrorMessage := Validation.Validation("Start Date", "End Date", "Start Time", "End Time", "Reason Code");
+                if ErrorMessage <> '' then
+                    Error(ErrorMessage);
+            end;
         }
         field(5; "End Date"; Date)
         {
             Caption = 'End Date';
             trigger OnValidate()
+            var
+                ErrorMessage: Text;
             begin
-                if "End Date" < "Start Date" then
-                    Error('Ending date, must be no earlier than starting date.');
+                ErrorMessage := Validation.Validation("Start Date", "End Date", "Start Time", "End Time", "Reason Code");
+                if ErrorMessage <> '' then
+                    Error(ErrorMessage);
             end;
         }
         field(6; "End Time"; Time)
         {
             Caption = 'End Time';
             InitValue = 180000T;
+            trigger OnValidate()
+            var
+                ErrorMessage: Text;
+            begin
+                ErrorMessage := Validation.Validation("Start Date", "End Date", "Start Time", "End Time", "Reason Code");
+                if ErrorMessage <> '' then
+                    Error(ErrorMessage);
+            end;
         }
         field(7; "Reason Code"; Code[20])
         {
@@ -67,7 +87,12 @@ table 50101 "Out Of Office Request"
         }
         field(12; "Photo"; Media)
         {
+
+        }
+        field(13; "Photo Blob"; Blob)
+        {
             Caption = 'Document';
+            Subtype = Bitmap;
         }
     }
     keys
@@ -75,6 +100,10 @@ table 50101 "Out Of Office Request"
         key(PK; "Entry No.")
         {
             Clustered = true;
+        }
+        key(EmployeeKey; "Employee No.")
+        {
+            Clustered = false;
         }
     }
     trigger OnInsert()
@@ -85,6 +114,8 @@ table 50101 "Out Of Office Request"
         Employee.SetRange("Associated User Id", UserSecurityId());
         if Employee.FindFirst() then
             Rec."Employee No." := Employee."No.";
-
     end;
+
+    var
+        Validation: Codeunit "Date Time Validation";
 }

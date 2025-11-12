@@ -4,6 +4,7 @@ page 50102 "Out Of Office Request Document"
     SourceTable = "Out Of Office Request";
     ApplicationArea = All;
     Caption = 'Out Of Office Request Document';
+    UsageCategory = Documents;
 
     layout
     {
@@ -69,13 +70,64 @@ page 50102 "Out Of Office Request Document"
                 {
                     ToolTip = 'Specify the reason why the request was declined, if applicable.';
                 }
+                field("Document"; Rec."Photo Blob")
+                {
+                    ToolTip = 'Attach a document.';
+                }
             }
         }
-        area(FactBoxes)
+        // area(FactBoxes)
+        // {
+        //     part(Photo; "Out Of Office Photo FactBox")
+        //     {
+        //         SubPageLink = "Entry No." = field("Entry No.");
+        //     }
+        // }
+    }
+    actions
+    {
+        area(Processing)
         {
-            part(Photo; "Out Of Office Photo FactBox")
+            action(ImportPicture)
             {
-                SubPageLink = "Entry No." = field("Entry No.");
+                ApplicationArea = All;
+                Caption = 'Import';
+                Image = Import;
+                ToolTip = 'Import a picture file.';
+                trigger OnAction()
+                var
+                    TempBlob: Codeunit "Temp Blob";
+                    FileName: Text;
+                    InStream: InStream;
+                    OutStream: OutStream;
+                begin
+                    if UploadIntoStream('Import Picture', '', '', FileName, InStream) then begin
+                        Clear(Rec."Photo Blob");
+                        TempBlob.CreateOutStream(OutStream);
+                        CopyStream(OutStream, InStream);
+                        Rec.CalcFields("Photo Blob");
+                        Rec."Photo Blob".CreateOutStream(OutStream);
+                        TempBlob.CreateInStream(InStream);
+                        CopyStream(OutStream, InStream);
+                        Rec.Modify(true);
+                        CurrPage.Update(false);
+                    end;
+                end;
+            }
+            action(RemovePicture)
+            {
+                Caption = 'Remove';
+                Image = Delete;
+                ToolTip = 'Remove the current image';
+                trigger OnAction()
+                begin
+                    if Rec."Photo Blob".HasValue() then begin
+                        Clear(Rec."Photo Blob");
+                        Rec.Modify(true);
+                        CurrPage.Update(false);
+                    end else
+                        Message('No picture to remove');
+                end;
             }
         }
     }

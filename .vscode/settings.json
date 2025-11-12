@@ -1,0 +1,10 @@
+{
+    "al.codeAnalyzers": [
+        "${CodeCop}",
+        "${UICop}"
+    ],
+    "workbench.colorTheme": "Tomorrow Night Blue",
+    "al.packageCachePath": "./.alpackages",
+    "al.enableCodeAnalysis": true,
+    "al.inlayhints.parameterNames.enabled": true,
+}

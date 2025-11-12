@@ -7,7 +7,7 @@ page 50103 "Out Of Office Photo FactBox"
     {
         area(content)
         {
-            field(Photo; Rec.Photo)
+            field(Photo; Rec."Photo Blob")
             {
                 ApplicationArea = All;
                 ShowCaption = false;
@@ -25,18 +25,21 @@ page 50103 "Out Of Office Photo FactBox"
                 Caption = 'Import';
                 Image = Import;
                 ToolTip = 'Import a picture file.';
-
                 trigger OnAction()
                 var
+                    TempBlob: Codeunit "Temp Blob";
                     FileName: Text;
-                    TempFilePath: Text;
                     InStream: InStream;
+                    OutStream: OutStream;
                 begin
-                    UploadIntoStream('Select a picture', '', '', TempFilePath, InStream);
-
-                    Rec.Photo.ImportStream(InStream, TempFilePath);
-
-                    Rec.Modify(true);
+                    if UploadIntoStream('Import Picture', '', '', FileName, InStream) then begin
+                        TempBlob.CreateOutStream(OutStream);
+                        CopyStream(OutStream, InStream);
+                        Rec.CalcFields("Photo Blob");
+                        Rec."Photo Blob".CreateOutStream(OutStream);
+                        TempBlob.CreateInStream(InStream);
+                        CopyStream(OutStream, InStream);
+                    end;
                 end;
             }
 

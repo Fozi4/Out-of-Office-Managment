@@ -7,58 +7,54 @@ report 50110 "Out Of Office Report"
 
     dataset
     {
-        dataitem(Employee; "Out Of Office Request")
+        dataitem(Employee; Employee)
         {
-            RequestFilterFields = "Employee No.";
-            column(Employee_No_; "Employee No.") { }
+            RequestFilterFields = "No.";
+            column(Employee_No; "No.") { }
             column(Employee_Name; EmpName) { }
 
             dataitem(Request; "Out Of Office Request")
             {
-                DataItemLink = "Employee No." = field("Employee No.");
-                column(Start_Date; "StartDateFilter") { }
-                column(End_Date; "EndDateFilter") { }
-                column(Reason_Code; "Reason Code") { }
-                column(Day_Count; DayCount) { }
+                DataItemLinkReference = Employee;
+                DataItemLink = "Employee No." = field("No.");
+                column(Start_Date; StartDateFilter) { }
+                column(End_Date; EndDateFilter) { }
+                column(Reason; "Reason Code") { }
+                column(Total_Days; DayCount) { }
                 trigger OnAfterGetRecord()
+                var
+                    TempRequest: Record "Out Of Office Request";
                 begin
-                    if ProcessedCodeList.Contains(Request."Reason Code") then
+                    if ProcessedCodeList.Contains("Reason Code") then
                         CurrReport.Skip();
-                    OutOfficeRequest.SetRange("Employee No.", Employee."Employee No.");
-                    OutOfficeRequest.SetFilter("Start Date", '>=%1 ', StartDateFilter);
-                    OutOfficeRequest.SetFilter("End Date", '<=%1', EndDateFilter);
-                    OutOfficeRequest.SetRange("Reason Code", Request."Reason Code");
-                    //OutOfficeRequest.SetFilter(Status, 'Approved');
                     Clear(DayCount);
-                    if OutOfficeRequest.FindSet() then
+                    TempRequest.SetRange("Employee No.", "Employee No.");
+                    TempRequest.SetFilter("Start Date", '>=%1 ', StartDateFilter);
+                    TempRequest.SetFilter("End Date", '<=%1', EndDateFilter);
+                    TempRequest.SetRange("Reason Code", "Reason Code");
+                    if TempRequest.FindSet() then
                         repeat
-                            DayCount += (OutOfficeRequest."End Date" - OutOfficeRequest."Start Date") + 1;
-                        until OutOfficeRequest.Next() = 0;
-                    ProcessedCodeList.Add(Request."Reason Code");
+                            DayCount += (TempRequest."End Date" - TempRequest."Start Date") + 1;
+                        until TempRequest.Next() = 0;
+                    ProcessedCodeList.Add("Reason Code");
                 end;
 
                 trigger OnPreDataItem()
                 begin
-                    Request.SetFilter("Start Date", '>=%1 ', StartDateFilter);
-                    Request.SetFilter("End Date", '<=%1', EndDateFilter);
+                    Request.SetFilter(Request."Start Date", '>=%1 ', StartDateFilter);
+                    Request.SetFilter(Request."End Date", '<=%1', EndDateFilter);
                 end;
             }
-
             trigger OnAfterGetRecord()
             var
                 Emp: Record Employee;
             begin
-                if ProcessedEmpCodeList.Contains(Employee."Employee No.") then
-                    CurrReport.Skip();
                 EmpName := '';
-                if Emp.Get(Employee."Employee No.") then
+                if Emp.Get(Employee."No.") then
                     EmpName := Emp."First Name" + ' ' + Emp."Last Name";
-                ProcessedEmpCodeList.Add(Employee."Employee No.");
+                Clear(ProcessedCodeList);
             end;
-
         }
-
-
     }
     requestpage
     {
@@ -78,8 +74,6 @@ report 50110 "Out Of Office Report"
 
         }
     }
-
-
     rendering
     {
         layout(LayoutName)
@@ -95,6 +89,4 @@ report 50110 "Out Of Office Report"
         StartDateFilter: Date;
         EndDateFilter: Date;
         ProcessedCodeList: List of [Code[20]];
-        ProcessedEmpCodeList: List of [Code[20]];
-        OutOfficeRequest: Record "Out Of Office Request";
 }
