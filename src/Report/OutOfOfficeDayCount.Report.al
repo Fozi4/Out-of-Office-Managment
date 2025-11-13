@@ -64,11 +64,13 @@ report 50110 "Out Of Office Report"
             {
                 field(StartDateFilter; "StartDateFilter")
                 {
-
+                    Caption = 'Start Date';
+                    ToolTip = 'Specify starting date';
                 }
                 field(EndDateFilter; EndDateFilter)
                 {
-
+                    Caption = 'End Date';
+                    ToolTip = 'Specify ending date';
                 }
             }
 
