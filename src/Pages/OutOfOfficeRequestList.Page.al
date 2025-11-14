@@ -160,9 +160,9 @@ page 50101 "Out Of Office Request List"
                 actionref("Start Process Promoted"; "Start Process") { }
                 actionref("Approve Promoted"; "Approve") { }
                 actionref("Decline Promoted"; "Decline") { }
-                actionref("Print Out of Office Day Count Promoted"; "Print Out of Office Day Count") { }
                 //actionref("ImportPicture Promoted"; "ImportPicture") { }
             }
+            actionref("Print Out of Office Day Count Promoted"; "Print Out of Office Day Count") { }
         }
     }
     local procedure ValidateRequiredFields()

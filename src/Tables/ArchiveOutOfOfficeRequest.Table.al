@@ -40,7 +40,7 @@ table 50102 "Archive Out of Office Request"
         {
 
         }
-        field(11; "Photo Blob"; Blob)
+        field(13; "Photo Blob"; Blob)
         {
             Subtype = Bitmap;
         }
