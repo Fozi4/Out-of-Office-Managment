@@ -3,7 +3,7 @@
         "${CodeCop}",
         "${UICop}"
     ],
-    "workbench.colorTheme": "Tomorrow Night Blue",
+    "workbench.colorTheme": "Default Dark+",
     "al.packageCachePath": "./.alpackages",
     "al.enableCodeAnalysis": true,
     "al.inlayhints.parameterNames.enabled": true,

@@ -3,7 +3,7 @@ report 50110 "Out Of Office Report"
     UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;
     Caption = 'Out Of Office Day Count';
-    DefaultRenderingLayout = LayoutName;
+    DefaultRenderingLayout = RDLCLayout;
 
     dataset
     {
@@ -82,6 +82,11 @@ report 50110 "Out Of Office Report"
         {
             Type = Word;
             LayoutFile = 'OutOfOfficeDayCount.docx';
+        }
+        layout(RDLCLayout)
+        {
+            Type = RDLC;
+            LayoutFile = 'OutOfOfficeDayCount.rdlc';
         }
     }
 
