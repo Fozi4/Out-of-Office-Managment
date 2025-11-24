@@ -76,6 +76,7 @@ page 50101 "Out Of Office Request List"
                     begin
                         ValidateRequiredFields();
                         Rec.Status := Rec.Status::"In Process";
+                        StatusChange.OnStatusChange(Rec."Entry No.", Format(Rec.Status::"In Process"));
                         Rec.Modify(true);
                         CurrPage.Update(false);
                     end;
@@ -90,6 +91,7 @@ page 50101 "Out Of Office Request List"
                     begin
                         ValidateRequiredFields();
                         Rec.Status := Rec.Status::"Approved";
+                        StatusChange.OnStatusChange(Rec."Entry No.", Format(Rec.Status::"Approved"));
                         Rec.Modify(true);
                         CurrPage.Update(false);
                     end;
@@ -106,6 +108,7 @@ page 50101 "Out Of Office Request List"
                             Error('Reject Reason must be indicated.');
                         ValidateRequiredFields();
                         Rec.Status := Rec.Status::"Declined";
+                        StatusChange.OnStatusChange(Rec."Entry No.", Format(Rec.Status::"Declined"));
                         Rec.Modify(true);
                         CurrPage.Update(false);
                     end;
@@ -186,4 +189,6 @@ page 50101 "Out Of Office Request List"
             Error('Description is required.');
     end;
 
+    var
+        StatusChange: Codeunit "On Status Change";
 }

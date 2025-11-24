@@ -9,33 +9,35 @@ report 50110 "Out Of Office Report"
     {
         dataitem(Employee; Employee)
         {
+            PrintOnlyIfDetail = true;
             RequestFilterFields = "No.";
             column(Employee_No; "No.") { }
             column(Employee_Name; EmpName) { }
 
             dataitem(Request; "Out Of Office Request")
             {
+                DataItemTableView = sorting("Employee No.");
                 DataItemLinkReference = Employee;
                 DataItemLink = "Employee No." = field("No.");
-                column(Start_Date; StartDateFilter) { }
-                column(End_Date; EndDateFilter) { }
+                column(Start_Date; Format(StartDateFilter, 0, '<Closing><Day>. <Month Text> <Year4>')) { }//, 0, '<Day,2>.<Month,2>.<Year,4>')) { }
+                column(End_Date; Format(EndDateFilter, 0, '<Closing><Day>. <Month Text> <Year4>')) { }
                 column(Reason; "Reason Code") { }
                 column(Total_Days; DayCount) { }
                 trigger OnAfterGetRecord()
                 var
-                    TempRequest: Record "Out Of Office Request";
+                    Request: Record "Out Of Office Request";
                 begin
                     if ProcessedCodeList.Contains("Reason Code") then
                         CurrReport.Skip();
                     Clear(DayCount);
-                    TempRequest.SetRange("Employee No.", "Employee No.");
-                    TempRequest.SetFilter("Start Date", '>=%1 ', StartDateFilter);
-                    TempRequest.SetFilter("End Date", '<=%1', EndDateFilter);
-                    TempRequest.SetRange("Reason Code", "Reason Code");
-                    if TempRequest.FindSet() then
+                    Request.SetRange("Employee No.", "Employee No.");
+                    Request.SetFilter("Start Date", '>=%1 ', StartDateFilter);
+                    Request.SetFilter("End Date", '<=%1', EndDateFilter);
+                    Request.SetRange("Reason Code", "Reason Code");
+                    if Request.FindSet() then
                         repeat
-                            DayCount += (TempRequest."End Date" - TempRequest."Start Date") + 1;
-                        until TempRequest.Next() = 0;
+                            DayCount += (Request."End Date" - Request."Start Date") + 1;
+                        until Request.Next() = 0;
                     ProcessedCodeList.Add("Reason Code");
                 end;
 
@@ -86,7 +88,7 @@ report 50110 "Out Of Office Report"
         layout(RDLCLayout)
         {
             Type = RDLC;
-            LayoutFile = 'OutOfOfficeDayCount.rdlc';
+            LayoutFile = 'OutOfOfficeDayCount.rdl';
         }
     }
 
